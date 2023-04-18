@@ -71,5 +71,31 @@ def add_by_title(title):
             file_data = json.load(file)
         posts.insert_one(file_data)
 
-def get_book():
-    pass
+# Fonctions pour retrouver et mettre en forme des recherches dans la base de données.
+def get_author(value):
+    search = test_collection.find({"$text": {"$search": f"{value}"}})
+    title_result = search.distinct("oai_dc:dc.dc:creator")
+    value_split = title_result[0].split(" ")
+    author_ln = value_split[0].strip(',')
+    author_fn = value_split[1]
+    author_string = f"{author_fn} {author_ln}"
+    return author_string
+
+
+# value = test_collection.distinct("oai_dc:dc.dc:creator")
+# print(get_author(value))
+
+def get_book(value):
+    search = test_collection.find({"$text": {"$search": f"{value}"}})
+    title_result = search.distinct("oai_dc:dc.dc:title")
+    value_book_split = title_result[0].split("/")
+    title = value_book_split[0]
+    return title
+
+# value_book = test_collection.distinct("oai_dc:dc.dc:title")
+
+author_value = input("De quel.le auteur.rice voulez-vous trouver les oeuvres ?")
+print(get_book(author_value))
+
+book_value = input("De quel livre voulez-vous retrouver l'auteur.rice ?")
+print(get_author(book_value))
