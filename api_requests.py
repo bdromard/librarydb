@@ -71,11 +71,5 @@ def add_by_title(title):
             file_data = json.load(file)
         posts.insert_one(file_data)
 
-# ---------------------------------------------------INTERFACE CODE-----------------------------------------------------
-
-# isbn_input = str(input("Quel est l'ISBN que vous voulez ajouter ?"))
-#
-# add_by_isbn(isbn_input)
-
-# title_input = input("Quel est le titre que vous voulez ajouter ?")
-# add_by_title(title_input)
+def get_book():
+    pass
