@@ -97,7 +97,7 @@ class Database:
     def create_collection(self, name):
         self.db.createCollection(f'{name}')
 
-    def show_collection(self, collection_name):
+    def show_all_collection(self, collection_name):
         collection_to_show = self.db[f'{collection_name}']
         collection_cursor = collection_to_show.find({})
         for document in collection_cursor:
