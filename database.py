@@ -8,7 +8,8 @@ API_URL = "http://catalogue.bnf.fr/api/SRU?version=1.2&operation=searchRetrieve&
 # ---------------------------------DATABASE CODE------------------------------------------------------------------------
 # Database access
 
-
+# Fonction pour vérifier le format de l'ISBN, si incorrect ou comportant un tiret ;
+# l'API de la BNF n'accepte pas de tiret.
 def check_isbn(isbn):
     if not isbn.startswith("978"):
         print("Veuillez insérer un ISBN correct.")
@@ -27,8 +28,6 @@ class Database:
         self.test_collection = self.db.testCollection
         self.posts = self.db.posts
 
-    # Fonction pour vérifier le format de l'ISBN, si incorrect ou comportant un tiret ;
-    # l'API de la BNF n'accepte pas de tiret.
 
     # Fonction de requête API et d'ajout dans la BDD par ISBN.
     def add_by_isbn(self, isbn):
@@ -95,17 +94,14 @@ class Database:
         title = value_book_split[0]
         return title
 
+    def create_collection(self, name):
+        self.db.createCollection(f'{name}')
+
+    def show_collection(self, collection_name):
+        collection_to_show = self.db[f'{collection_name}']
+        collection_cursor = collection_to_show.find({})
+        for document in collection_cursor:
+            print(document)
 
 
-    # Appels de fonction de test
 
-    # value = test_collection.distinct("oai_dc:dc.dc:creator")
-    # print(get_author(value))
-
-    # value_book = test_collection.distinct("oai_dc:dc.dc:title")
-
-    # author_value = input("De quel.le auteur.rice voulez-vous trouver les oeuvres ?")
-    # print(get_book(author_value))
-    #
-    # book_value = input("De quel livre voulez-vous retrouver l'auteur.rice ?")
-    # print(get_author(book_value))

@@ -1,6 +1,6 @@
-
 from database import *
 import tkinter
+import pymongo
 
 db = Database()
 # Code d'interface
@@ -12,8 +12,13 @@ db = Database()
 
 # value_book = db.test_collection.distinct("oai_dc:dc.dc:title")
 
-author_value = input("De quel.le auteur.rice voulez-vous trouver les oeuvres ?")
-print(db.get_book(author_value))
+# author_value = input("De quel.le auteur.rice voulez-vous trouver les oeuvres ?")
+# print(db.get_book(author_value))
+#
+# book_value = input("De quel livre voulez-vous retrouver l'auteur.rice ?")
+# print(db.get_author(book_value))
 
-book_value = input("De quel livre voulez-vous retrouver l'auteur.rice ?")
-print(db.get_author(book_value))
+# new_user_collection = input("Donnez un nom à votre nouvelle bibliothèque: ")
+# db.db["test2"].insert_one({'testKey': 'testValue'})
+
+# print(db.show_collection("testCollection"))
