@@ -1,30 +1,29 @@
 from database import *
-# from gui import *
+from gui import *
 import sys
 import random
 import pymongo
-from PySide6 import QtCore, QtWidgets, QtGui
+# from PySide6 import QtCore, QtWidgets, QtGui
 
 
 db = Database()
-# app = QtWidgets.QApplication([])
-# widget = MyWidget()
-# widget.resize(800, 600)
-# widget.show()
-# sys.exit(app.exec())
+app = QtWidgets.QApplication([])
+widget = MainWindow()
+widget.show()
+sys.exit(app.exec())
 
 # Code d'interface
 
-@QtCore.Slot()
-def print_isbn():
-    print("978200015312")
-
-# Initialisation de l'application, avec un bouton qui appelle la fonction print_isbn, pour voir l'ISBN dans la console.
-app = QtWidgets.QApplication(sys.argv)
-button = QtWidgets.QPushButton("Print ISBN")
-button.clicked.connect(print_isbn)
-button.show()
-app.exec()
+# @QtCore.Slot()
+# def print_isbn():
+#     print("978200015312")
+#
+# # Initialisation de l'application, avec un bouton qui appelle la fonction print_isbn, pour voir l'ISBN dans la console.
+# app = QtWidgets.QApplication(sys.argv)
+# button = QtWidgets.QPushButton("Print ISBN")
+# button.clicked.connect(print_isbn)
+# button.show()
+# app.exec()
 # Appels de fonction de test
 
 # value = db.test_collection.distinct("oai_dc:dc.dc:creator")
