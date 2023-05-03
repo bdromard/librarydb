@@ -2,7 +2,7 @@ import requests as req
 import json
 from pymongo import *
 import xmltodict
-import tkinter
+
 
 API_URL = "http://catalogue.bnf.fr/api/SRU?version=1.2&operation=searchRetrieve&query="
 # ---------------------------------DATABASE CODE------------------------------------------------------------------------
@@ -19,9 +19,11 @@ def check_isbn(isbn):
         isbn_join = ''.join(isbn_split)
         return isbn_join
 
-
+# Création de la classe Database.
 class Database:
 
+    # __init__ de la classe ; initialise le client MongoDO, utilise la DB de test et deux collections : celle de test
+    # et posts.
     def __init__(self):
         self.client = MongoClient()
         self.db = self.client.testDB
@@ -51,13 +53,14 @@ class Database:
                 response_xml["srw:searchRetrieveResponse"]["srw:records"]["srw:record"]["srw:recordData"],
                 sort_keys=True,
                 indent=4)
-            # Inscription de la réponse dans un fichier JSON, puis lecture pour pouvoir être inséré dans la BDD MongoDB.
+            # Inscription de la réponse dans un fichier JSON, puis lecture pour pouvoir être insérée dans la BDD MongoDB.
             with open("data.json", "w") as data:
                 data.write(pretty_response)
             with open("data.json") as file:
                 file_data = json.load(file)
             self.posts.insert_one(file_data)
 
+    # Fonction de requête API et d'ajout dans la DB par nom d'auteur.ice.
     def add_by_title(self, title):
         try:
             response = req.get(
@@ -94,9 +97,11 @@ class Database:
         title = value_book_split[0]
         return title
 
+    # Fonction de création d'une nouvelle collection dans la DB.
     def create_collection(self, name):
         self.db.createCollection(f'{name}')
 
+    # Fonction permettant de montrer tous les documents d'une collection.
     def show_all_collection(self, collection_name):
         collection_to_show = self.db[f'{collection_name}']
         collection_cursor = collection_to_show.find({})
