@@ -3,28 +3,6 @@ import sys
 import random
 import database as db
 
-print("Coucou, je suis la branche dev")
-
-# Création des widgets à utiliser dans main.py.
-
-# Code de référence du tutorial
-# class MyWidget(QtWidgets.QWidget):
-#
-#     def __init__(self):
-#         super().__init__()
-#         self.hello = ["Bonjour Monde", "Hallo Welt", "Hola Mundo"]
-#         self.button = QtWidgets.QPushButton("Click Me!")
-#         self.text = QtWidgets.QLabel("Hello World",
-#                                      alignment=QtCore.Qt.AlignCenter)
-#         self.layout = QtWidgets.QVBoxLayout(self)
-#         self.layout.addWidget(self.text)
-#         self.layout.addWidget(self.button)
-#         self.button.clicked.connect(self.magic)
-#
-#     @QtCore.Slot()
-#     def magic(self):
-#         self.text.setText(random.choice(self.hello))
-
 class MainWindow(QtWidgets.QMainWindow):
 
     def __init__(self):
@@ -46,6 +24,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.add_isbn_btn.clicked.connect(self.isbn_button_clicked)
         self.add_title_btn = QtWidgets.QPushButton("Ajouter Titre", self)
         self.add_title_btn.setGeometry(310, 70, 100, 30)
+        self.add_title_btn.clicked.connect(self.title_button_clicked)
         self.isbn_input = QtWidgets.QLineEdit('Ajout par ISBN du livre', self)
         self.isbn_input.setGeometry(105, 30, 200, 30)
         self.isbn_input.mousePressEvent = self._mousePressEvent_isbn
@@ -55,6 +34,7 @@ class MainWindow(QtWidgets.QMainWindow):
         # setBuddy permet de focaliser l'input du clavier sur le label choisi.
         self.isbn_label.setBuddy(self.isbn_input)
         self.title_label.setBuddy(self.title_input)
+
 
     # Slots qui permettent de clear les inputs dès qu'ils sont cliqués une seule fois. Marche avec tous les inputs
     # d'une souris (clic gauche, clic droit...) ; comme on spécifie que la fonction de base ne retourne rien, la
@@ -76,6 +56,20 @@ class MainWindow(QtWidgets.QMainWindow):
         title = self.title_input.text()
         print(title)
         db.Database.add_by_title(db.Database(), title)
+
+    def raise_error(self, text):
+        # Fonction qui affichera une erreur si une recherche ne renvoie rien, etc.
+        # Création d'une instance de MessageBox.
+        message = QtWidgets.QMessageBox(self, text=text)
+        message.exec()
+
+
+class MessageBox(QtWidgets.QMessageBox):
+
+    def __init__(self):
+        super().__init__()
+        self.setGeometry(300, 200, 100, 100)
+
 
 
 

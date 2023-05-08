@@ -12,18 +12,6 @@ widget = MainWindow()
 widget.show()
 sys.exit(app.exec())
 
-# Code d'interface
-
-# @QtCore.Slot()
-# def print_isbn():
-#     print("978200015312")
-#
-# # Initialisation de l'application, avec un bouton qui appelle la fonction print_isbn, pour voir l'ISBN dans la console.
-# app = QtWidgets.QApplication(sys.argv)
-# button = QtWidgets.QPushButton("Print ISBN")
-# button.clicked.connect(print_isbn)
-# button.show()
-# app.exec()
 # Appels de fonction de test
 
 # value = db.test_collection.distinct("oai_dc:dc.dc:creator")
