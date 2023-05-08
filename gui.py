@@ -3,6 +3,8 @@ import sys
 import random
 import database as db
 
+print("Coucou, je suis la branche dev")
+
 # Création des widgets à utiliser dans main.py.
 
 # Code de référence du tutorial
