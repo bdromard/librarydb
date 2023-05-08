@@ -2,6 +2,7 @@ import requests as req
 import json
 from pymongo import *
 import xmltodict
+import errors
 
 
 API_URL = "http://catalogue.bnf.fr/api/SRU?version=1.2&operation=searchRetrieve&query="
@@ -41,14 +42,15 @@ class Database:
                 f'{API_URL}bib.isbn%20any%20"{isbn}"&recordSchema=dublincore')
             response.raise_for_status()
             response_xml = xmltodict.parse(response.content)
-            # Méthode de la librairie json pour mettre en forme le fichier JSON ; type => string.
-            if response_xml["srw:searchRetrieveResponse"]["srw:numberOfRecords"] == "0":
-                print("La recherche n'a pas renvoyé de résultat, essayez d'autres critères.")
-                exit()
+            # Search constitue le nombre de résultats de la requête vers la BNF. S'il n'y a pas de résultat,
+            # alors on renvoie une erreur.
+            search = response_xml["srw:searchRetrieveResponse"]["srw:numberOfRecords"]
+            if search == "0":
+                raise errors.ResultError(search)
         except Exception as err:
-            print(f'An Exception has occurred: {err}')
             print("L'ISBN ne renvoie pas de données exploitables. Essayez un autre type de recherche.")
         else:
+            # Méthode de la librairie json pour mettre en forme le fichier JSON ; type => string.
             pretty_response = json.dumps(
                 response_xml["srw:searchRetrieveResponse"]["srw:records"]["srw:record"]["srw:recordData"],
                 sort_keys=True,
