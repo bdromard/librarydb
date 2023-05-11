@@ -7,6 +7,7 @@ import pymongo
 
 
 db = Database()
+# db.get_title('9782707321213')
 app = QtWidgets.QApplication([])
 widget = MainWindow()
 widget.show()
@@ -29,3 +30,5 @@ sys.exit(app.exec())
 # db.db["test2"].insert_one({'testKey': 'testValue'})
 
 # print(db.show_collection("testCollection"))
+
+
