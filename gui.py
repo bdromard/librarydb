@@ -1,6 +1,8 @@
 from PySide6 import QtCore, QtWidgets, QtGui
 import sys
 import random
+
+import database
 import database as db
 
 class MainWindow(QtWidgets.QMainWindow):
@@ -15,8 +17,9 @@ class MainWindow(QtWidgets.QMainWindow):
         self.create_inputs()
         self.create_buttons()
         self.set_buddies()
-    def create_labels(self):
+
         # Création des différents widgets utilisables dans la GroupBox
+    def create_labels(self):
         self.isbn_label = QtWidgets.QLabel("ISBN du livre", self)
         self.isbn_label.setGeometry(10, 30, 100, 30)
         self.title_label = QtWidgets.QLabel("Titre du livre", self)
@@ -41,6 +44,9 @@ class MainWindow(QtWidgets.QMainWindow):
         self.add_collection_btn = QtWidgets.QPushButton("Créer collection", self)
         self.add_collection_btn.setGeometry(225, 110, 185, 30)
         self.add_collection_btn.clicked.connect(self.collection_button_clicked)
+        self.show_titles = QtWidgets.QPushButton("Montrer oeuvres de la collection", self)
+        self.show_titles.setGeometry(10, 150, 225, 30)
+        self.show_titles.clicked.connect(self.show_titles_clicked)
 
     def set_buddies(self):
         # setBuddy permet de focaliser l'input du clavier sur le label choisi.
@@ -71,6 +77,9 @@ class MainWindow(QtWidgets.QMainWindow):
         new_collection = self.collection_input.text()
         print(new_collection)
         db.Database.create_collection(db.Database(), new_collection)
+
+    def show_titles_clicked(self):
+        db.Database.show_all_collection(db.Database(), 'testCollection')
 
     def raise_error(self, text):
         # Fonction qui affichera une erreur si une recherche ne renvoie rien, etc.

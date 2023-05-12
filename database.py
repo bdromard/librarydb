@@ -40,19 +40,20 @@ class Database:
     def add_by_isbn(self, isbn):
         # API request and insert to database.
         # ISBN verification : ISBN format and whether the reference already exists in collection.
+        # check_isbn will return an error for the user if the reference is already present in collection ;
+        # otherwise, it will execute the API request.
         correct_isbn = check_isbn(isbn)
-        verified_isbn = self.get_isbn(correct_isbn)
-        if correct_isbn == verified_isbn:
-            gui.MainWindow.raise_error(gui.MainWindow(), 'Cette référence est déjà présente dans votre collection')
-            raise errors.ExistingReference()
+        self.get_isbn(correct_isbn)
+        # if correct_isbn == verified_isbn:
+        #     gui.MainWindow.raise_error(gui.MainWindow(), 'Cette référence est déjà présente dans votre collection')
+        #     raise errors.ExistingReference()
         try:
             # Requête vers le catalogue général de la BNF
             response = req.get(
-                f'{API_URL}bib.isbn%20any%20"{isbn}"&recordSchema=dublincore')
+                f'{API_URL}bib.isbn%20any%20"{correct_isbn}"&recordSchema=dublincore')
             response.raise_for_status()
             response_xml = xmltodict.parse(response.content)
-            # Search constitue le nombre de résultats de la requête vers la BNF. S'il n'y a pas de résultat,
-            # alors on renvoie une erreur.
+            # Search is the number of results through the BNF API request. If there are no results, then exception raised.
             search = response_xml["srw:searchRetrieveResponse"]["srw:numberOfRecords"]
             if search == "0":
                 raise errors.ResultError(search)
@@ -67,11 +68,11 @@ class Database:
                 indent=4)
             print(pretty_response)
             # Inscription de la réponse dans un fichier JSON, puis lecture pour pouvoir être insérée dans la BDD MongoDB.
-            # with open("data.json", "w") as data:
-            #     data.write(pretty_response)
-            # with open("data.json") as file:
-            #     file_data = json.load(file)
-            # self.posts.insert_one(file_data)
+            with open("data.json", "w") as data:
+                data.write(pretty_response)
+            with open("data.json") as file:
+                file_data = json.load(file)
+            self.posts.insert_one(file_data)
 
     # Fonction de requête API et d'ajout dans la DB par nom d'auteur.ice.
     def add_by_title(self, title):
@@ -97,11 +98,11 @@ class Database:
                 sort_keys=True,
                 indent=4)
             print(pretty_response)
-            # with open("data.json", "w") as data:
-            #     data.write(pretty_response)
-            # with open("data.json") as file:
-            #     file_data = json.load(file)
-            # self.posts.insert_one(file_data)
+            with open("data.json", "w") as data:
+                data.write(pretty_response)
+            with open("data.json") as file:
+                file_data = json.load(file)
+            self.posts.insert_one(file_data)
 
     # Fonctions pour retrouver et mettre en forme des recherches dans la base de données.
     def get_author(self, title_or_isbn):
@@ -113,17 +114,30 @@ class Database:
         author_string = f"{author_fn} {author_ln}"
         return author_string
 
-    def get_title(self, author_or_isbn_or_title):
-        search = self.test_collection.find({"$text": {"$search": f"{author_or_isbn_or_title}"}})
-        title_result = search.distinct("oai_dc:dc.dc:title")
-        value_book_split = title_result[0].split("/")
-        title = value_book_split[0]
-        return title.strip()
+    def get_title(self, query):
+        search = self.test_collection.find({"$text": {"$search": f"{query}"}})
+        try:
+            title_result = search.distinct("oai_dc:dc.dc:title")
+            value_book_split = title_result[0].split("/")
+        except IndexError:
+            return query
+        else:
+            title = value_book_split[0].strip()
+            return title
 
+    # Fonction qui vérifie si la référence par ISBN est présente dans la collection. On essaie de modifier la référence
+    # telle que présente dans la collection, pour n'avoir que l'ISBN lui-même. S'il y a une erreur d'index,
+    # alors la référence n'est pas présente dans la collection, on retourne l'ISBN de base et on peut exécuter
+    # la recherche par API. Sinon on renvoie une erreur : la référence est déjà présente dans la collection.
     def get_isbn(self, isbn):
         search = self.test_collection.find({"$text": {"$search": f"{isbn}"}})
-        isbn_result = search.distinct("oai_dc:dc.dc:identifier")[0].replace('ISBN ', '')
-        return isbn_result
+        try:
+            search.distinct("oai_dc:dc.dc:identifier")[0].replace('ISBN ', '')
+        except IndexError:
+            return isbn
+        else:
+            gui.MainWindow.raise_error(gui.MainWindow(), 'Cette référence est déjà présente dans votre collection')
+            raise errors.ExistingReference()
 
     # Fonction de création d'une nouvelle collection dans la DB.
     def create_collection(self, name: str):
@@ -138,11 +152,13 @@ class Database:
             raise errors.ExistingCollection()
 
     # Fonction permettant de montrer tous les documents d'une collection.
-    def show_all_collection(self, collection_name):
+    def show_all_collection(self, collection_name: str):
         collection_to_show = self.db[f'{collection_name}']
         collection_cursor = collection_to_show.find({})
         for document in collection_cursor:
             print(document)
+            if 'oai_dc:dc' in document:
+                print(document['oai_dc:dc']['dc:title'])
 
 
 
