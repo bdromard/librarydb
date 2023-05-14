@@ -18,7 +18,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.create_buttons()
         self.set_buddies()
 
-        # Création des différents widgets utilisables dans la GroupBox
+    # Widgets creation, usable in GroupBox.
     def create_labels(self):
         self.isbn_label = QtWidgets.QLabel("ISBN du livre", self)
         self.isbn_label.setGeometry(10, 30, 100, 30)
@@ -46,17 +46,22 @@ class MainWindow(QtWidgets.QMainWindow):
         self.add_collection_btn.clicked.connect(self.collection_button_clicked)
         self.show_titles = QtWidgets.QPushButton("Montrer oeuvres de la collection", self)
         self.show_titles.setGeometry(10, 150, 225, 30)
-        self.show_titles.clicked.connect(self.show_titles_clicked)
+        self.show_titles.clicked.connect(self.create_data_table)
 
     def set_buddies(self):
-        # setBuddy permet de focaliser l'input du clavier sur le label choisi.
+        # Keyboard focus on selected label.
         self.isbn_label.setBuddy(self.isbn_input)
         self.title_label.setBuddy(self.title_input)
 
+    def create_data_table(self):
+        data_table = QtWidgets.QTableWidget(3, 3, self)
+        data_table.setGeometry(50, 50, 400, 400)
+        data_table.setHorizontalHeaderLabels(["Titre", "Auteur.ice", "ISBN"])
+        data_table.show()
 
-    # Slots qui permettent de clear les inputs dès qu'ils sont cliqués une seule fois. Marche avec tous les inputs
-    # d'une souris (clic gauche, clic droit...) ; comme on spécifie que la fonction de base ne retourne rien, la
-    # logique fait qu'elle ne fonctionne qu'une seule fois pour avoir un input vide.
+
+    # Slots to clear input when clicked once. Works with every mouse input. Primary function does not return anything,
+    # which allows it to work only once.
     def _mousePressEvent_isbn(self, event):
         self.isbn_input.clear()
         self.isbn_input.mousePressEvent = None
@@ -65,6 +70,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.title_input.clear()
         self.title_input.mousePressEvent = None
 
+    # Slots to connect to specified buttons.
     def isbn_button_clicked(self):
         isbn = self.isbn_input.text()
         db.Database.add_by_isbn(db.Database(), isbn)
@@ -81,18 +87,13 @@ class MainWindow(QtWidgets.QMainWindow):
     def show_titles_clicked(self):
         db.Database.show_all_collection(db.Database(), 'testCollection')
 
+    # GUI error and user feedback. Instance creation of MessageBox.
     def raise_error(self, text):
-        # Fonction qui affichera une erreur si une recherche ne renvoie rien, etc.
-        # Création d'une instance de MessageBox.
+
         message = QtWidgets.QMessageBox(self, text=text)
         message.exec()
 
 
-class MessageBox(QtWidgets.QMessageBox):
-
-    def __init__(self):
-        super().__init__()
-        self.setGeometry(300, 200, 100, 100)
 
 
 

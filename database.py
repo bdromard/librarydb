@@ -11,8 +11,7 @@ API_URL = "http://catalogue.bnf.fr/api/SRU?version=1.2&operation=searchRetrieve&
 # ---------------------------------DATABASE CODE------------------------------------------------------------------------
 # Database access
 
-# Fonction pour vérifier le format de l'ISBN, si incorrect ou comportant un tiret ;
-# l'API de la BNF n'accepte pas de tiret.
+# Checking ISBN format: BNF API does not allow hyphen.
 def check_isbn(isbn):
     if not isbn.startswith("978"):
         gui.MainWindow.raise_error(gui.MainWindow(), 'Veuillez insérer un ISBN au bon format.')
@@ -24,11 +23,10 @@ def check_isbn(isbn):
     else:
         return isbn
 
-# Création de la classe Database.
+# Database class creation.
 class Database:
 
-    # __init__ de la classe ; initialise le client MongoDO, utilise la DB de test et deux collections : celle de test
-    # et posts.
+    # class __init__ ; MongoDB client init, using test DB and two test collections.
     def __init__(self):
         self.client = MongoClient()
         self.db = self.client.testDB
@@ -48,12 +46,13 @@ class Database:
         #     gui.MainWindow.raise_error(gui.MainWindow(), 'Cette référence est déjà présente dans votre collection')
         #     raise errors.ExistingReference()
         try:
-            # Requête vers le catalogue général de la BNF
+            # BNF API request.
             response = req.get(
                 f'{API_URL}bib.isbn%20any%20"{correct_isbn}"&recordSchema=dublincore')
             response.raise_for_status()
             response_xml = xmltodict.parse(response.content)
             # Search is the number of results through the BNF API request. If there are no results, then exception raised.
+            # Except is used for GUI error and user feedback.
             search = response_xml["srw:searchRetrieveResponse"]["srw:numberOfRecords"]
             if search == "0":
                 raise errors.ResultError(search)
@@ -61,29 +60,29 @@ class Database:
             gui.MainWindow.raise_error(gui.MainWindow(), "L'ISBN ne renvoie pas de données exploitables. "
                                                          "Essayez un autre type de recherche.")
         else:
-            # Méthode de la librairie json pour mettre en forme le fichier JSON ; type => string.
+            # JSON method to prettify JSON file. Returns string.
             pretty_response = json.dumps(
                 response_xml["srw:searchRetrieveResponse"]["srw:records"]["srw:record"]["srw:recordData"],
                 sort_keys=True,
                 indent=4)
             print(pretty_response)
-            # Inscription de la réponse dans un fichier JSON, puis lecture pour pouvoir être insérée dans la BDD MongoDB.
+            # File open and write JSON data, accepted by MongoDB. Collection insert.
             with open("data.json", "w") as data:
                 data.write(pretty_response)
             with open("data.json") as file:
                 file_data = json.load(file)
             self.posts.insert_one(file_data)
 
-    # Fonction de requête API et d'ajout dans la DB par nom d'auteur.ice.
+    # Function for API request and adding reference in collection.
     def add_by_title(self, title):
         # Check if title reference is already present in the collection.
         verified_title = self.get_title(title)
-        if title == verified_title:
-            gui.MainWindow.raise_error(gui.MainWindow(), 'Cette référence est déjà présente dans votre collection')
-            raise errors.ExistingReference()
+        # if title == verified_title:
+        #     gui.MainWindow.raise_error(gui.MainWindow(), 'Cette référence est déjà présente dans votre collection')
+        #     raise errors.ExistingReference()
         try:
             response = req.get(
-                f'{API_URL}bib.title%20any%20"{title}"&recordSchema=dublincore&maximumRecords=1')
+                f'{API_URL}bib.title%20any%20"{verified_title}"&recordSchema=dublincore&maximumRecords=1')
             response.raise_for_status()
             response_xml = xmltodict.parse(response.content)
             search = response_xml["srw:searchRetrieveResponse"]["srw:numberOfRecords"]
@@ -104,9 +103,9 @@ class Database:
                 file_data = json.load(file)
             self.posts.insert_one(file_data)
 
-    # Fonctions pour retrouver et mettre en forme des recherches dans la base de données.
-    def get_author(self, title_or_isbn):
-        search = self.test_collection.find({"$text": {"$search": f"{title_or_isbn}"}})
+    # Functions to find and correct query format.
+    def get_author(self, query):
+        search = self.test_collection.find({"$text": {"$search": f"{query}"}})
         title_result = search.distinct("oai_dc:dc.dc:creator")
         value_split = title_result[0].split(" ")
         author_ln = value_split[0].strip(',')
@@ -125,10 +124,8 @@ class Database:
             title = value_book_split[0].strip()
             return title
 
-    # Fonction qui vérifie si la référence par ISBN est présente dans la collection. On essaie de modifier la référence
-    # telle que présente dans la collection, pour n'avoir que l'ISBN lui-même. S'il y a une erreur d'index,
-    # alors la référence n'est pas présente dans la collection, on retourne l'ISBN de base et on peut exécuter
-    # la recherche par API. Sinon on renvoie une erreur : la référence est déjà présente dans la collection.
+    # Function to check if ISBN reference is present in collection.
+    # If index error, then reference is absent from collection. Otherwise, reference added to collection.
     def get_isbn(self, isbn):
         search = self.test_collection.find({"$text": {"$search": f"{isbn}"}})
         try:
@@ -139,9 +136,9 @@ class Database:
             gui.MainWindow.raise_error(gui.MainWindow(), 'Cette référence est déjà présente dans votre collection')
             raise errors.ExistingReference()
 
-    # Fonction de création d'une nouvelle collection dans la DB.
+    # Creation of new collection in DB.
     def create_collection(self, name: str):
-        # On vérifie tout d'abord si la collection n'existe pas déjà.
+        # First, check if collection already exists in DB.
         try:
             collection_search = self.db.list_collection_names().index(f'{name}')
         # If ValueError is raised, the collection does not exist: create collection.
@@ -151,7 +148,7 @@ class Database:
             gui.MainWindow.raise_error(gui.MainWindow(), 'Cette collection existe déjà.')
             raise errors.ExistingCollection()
 
-    # Fonction permettant de montrer tous les documents d'une collection.
+    # Show all documents in selected collection. Console print at the moment => create data visualization in software.
     def show_all_collection(self, collection_name: str):
         collection_to_show = self.db[f'{collection_name}']
         collection_cursor = collection_to_show.find({})
