@@ -2,7 +2,6 @@ from PySide6 import QtCore, QtWidgets, QtGui
 import sys
 import random
 
-import database
 import database as db
 
 class MainWindow(QtWidgets.QMainWindow):
@@ -54,10 +53,15 @@ class MainWindow(QtWidgets.QMainWindow):
         self.title_label.setBuddy(self.title_input)
 
     def create_data_table(self):
-        data_table = QtWidgets.QTableWidget(3, 3, self)
+        collection = db.Database.get_collection(db.Database())
+        data_box = QtWidgets.QDialog(self)
+        data_box.setGeometry(70, 70, 500, 500)
+        data_box.setWindowTitle("Votre collection")
+        # Using fixed row and column count but will need to adapt to collection size
+        data_table = QtWidgets.QTableWidget(data_box)
         data_table.setGeometry(50, 50, 400, 400)
         data_table.setHorizontalHeaderLabels(["Titre", "Auteur.ice", "ISBN"])
-        data_table.show()
+        data_box.show()
 
 
     # Slots to clear input when clicked once. Works with every mouse input. Primary function does not return anything,

@@ -28,7 +28,7 @@ sys.exit(app.exec())
 # new_user_collection = input("Donnez un nom à votre nouvelle bibliothèque: ")
 # db.db["test2"].insert_one({'testKey': 'testValue'})
 
-# print(db.show_collection("testCollection"))
+# print(db.show_all_collection("posts"))
 
 # db.get_title('9782707321213')
 

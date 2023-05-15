@@ -33,6 +33,8 @@ class Database:
         self.test_collection = self.db.testCollection
         self.posts = self.db.posts
 
+    def get_collection(self):
+        return self.posts
 
     # Fonction de requête API et d'ajout dans la BDD par ISBN.
     def add_by_isbn(self, isbn):
@@ -151,11 +153,14 @@ class Database:
     # Show all documents in selected collection. Console print at the moment => create data visualization in software.
     def show_all_collection(self, collection_name: str):
         collection_to_show = self.db[f'{collection_name}']
-        collection_cursor = collection_to_show.find({})
+        collection_cursor = collection_to_show.find()
         for document in collection_cursor:
-            print(document)
-            if 'oai_dc:dc' in document:
-                print(document['oai_dc:dc']['dc:title'])
-
+            pass
+            # title = document.get('title')
+            # dc_title = document.get('dc:title')
+            # print(title)
+            # print(dc_title)
+            # if title is None or dc_title is None:
+            #     print('pas dispo')
 
 
