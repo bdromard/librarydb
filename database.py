@@ -151,16 +151,9 @@ class Database:
             raise errors.ExistingCollection()
 
     # Show all documents in selected collection. Console print at the moment => create data visualization in software.
-    def show_all_collection(self, collection_name: str):
+    def get_all_collection(self, collection_name: str):
         collection_to_show = self.db[f'{collection_name}']
         collection_cursor = collection_to_show.find()
-        for document in collection_cursor:
-            pass
-            # title = document.get('title')
-            # dc_title = document.get('dc:title')
-            # print(title)
-            # print(dc_title)
-            # if title is None or dc_title is None:
-            #     print('pas dispo')
+        return collection_cursor
 
 

@@ -1,6 +1,7 @@
 from PySide6 import QtCore, QtWidgets, QtGui
 import sys
 import random
+import pandas
 
 import database as db
 
@@ -53,14 +54,22 @@ class MainWindow(QtWidgets.QMainWindow):
         self.title_label.setBuddy(self.title_input)
 
     def create_data_table(self):
-        collection = db.Database.get_collection(db.Database())
+        collection = db.Database.get_all_collection(db.Database(), 'testCollection')
+        # title = db.Database.get_title(db.Database(), "Le port intérieur")
         data_box = QtWidgets.QDialog(self)
         data_box.setGeometry(70, 70, 500, 500)
         data_box.setWindowTitle("Votre collection")
         # Using fixed row and column count but will need to adapt to collection size
-        data_table = QtWidgets.QTableWidget(3, 3, data_box)
+        # data_table = QtWidgets.QTableWidget(len(list(collection)), 3, data_box)
+        data_table = QtWidgets.QTableView(data_box)
         data_table.setGeometry(50, 50, 400, 400)
-        data_table.setHorizontalHeaderLabels(["Titre", "Auteur.ice", "ISBN"])
+        data_frame = pandas.DataFrame(list(collection.find()))
+        model = QtCore.QAbstractTableModel(data_frame)
+        data_table.setModel(model)
+        # data_table.setHorizontalHeaderLabels(["Titre", "Auteur.ice", "ISBN"])
+        # for document in collection:
+        #     print('coucou')
+        #     data_table.setItem(0, 0, QtWidgets.QTableWidgetItem(document.get('dc:title')))
         data_box.show()
 
 
