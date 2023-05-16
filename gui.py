@@ -58,7 +58,7 @@ class MainWindow(QtWidgets.QMainWindow):
         data_box.setGeometry(70, 70, 500, 500)
         data_box.setWindowTitle("Votre collection")
         # Using fixed row and column count but will need to adapt to collection size
-        data_table = QtWidgets.QTableWidget(data_box)
+        data_table = QtWidgets.QTableWidget(3, 3, data_box)
         data_table.setGeometry(50, 50, 400, 400)
         data_table.setHorizontalHeaderLabels(["Titre", "Auteur.ice", "ISBN"])
         data_box.show()
@@ -93,7 +93,6 @@ class MainWindow(QtWidgets.QMainWindow):
 
     # GUI error and user feedback. Instance creation of MessageBox.
     def raise_error(self, text):
-
         message = QtWidgets.QMessageBox(self, text=text)
         message.exec()
 
