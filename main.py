@@ -3,7 +3,7 @@ from gui import *
 import sys
 import random
 import pymongo
-# from PySide6 import QtCore, QtWidgets, QtGui
+from PySide6 import QtCore, QtWidgets, QtGui
 
 
 db = Database()

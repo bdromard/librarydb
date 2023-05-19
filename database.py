@@ -151,7 +151,8 @@ class Database:
             raise errors.ExistingCollection()
 
     # Show all documents in selected collection. Console print at the moment => create data visualization in software.
-    def get_all_collection(self, collection_name: str):
+    # Create a model readable by QTableView in Qt.
+    def get_model(self, collection_name: str):
         collection_to_show = self.db[f'{collection_name}']
         collection_cursor = collection_to_show.find()
         return collection_cursor
