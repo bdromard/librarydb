@@ -54,10 +54,12 @@ class MainWindow(QMainWindow):
         self.show_titles.setGeometry(10, 150, 225, 30)
         self.show_titles.clicked.connect(self.create_dialog)
 
+    # Create dialog box that will receive the QTableView to show data
     def create_dialog(self):
         self.data_dialog = QDialog(self)
         self.data_dialog.setGeometry(70, 70, 500, 500)
         self.data_dialog.setWindowTitle("Votre collection")
+        # self.data_table_view = DataTable(self)
         self.data_dialog.show()
 
     def set_buddies(self):
@@ -95,6 +97,7 @@ class MainWindow(QMainWindow):
         message = QMessageBox(self, text=text)
         message.exec()
 
+# Creating DataTable class to show data
 class DataTable(QWidget):
     def __init__(self, data):
         QWidget.__init__(self)

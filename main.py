@@ -7,10 +7,10 @@ from PySide6 import QtCore, QtWidgets, QtGui
 
 
 db = Database()
-app = QtWidgets.QApplication([])
-widget = MainWindow()
-widget.show()
-sys.exit(app.exec())
+# app = QtWidgets.QApplication([])
+# widget = MainWindow()
+# widget.show()
+# sys.exit(app.exec())
 
 # Appels de fonction de test
 
@@ -31,5 +31,8 @@ sys.exit(app.exec())
 # print(db.show_all_collection("posts"))
 
 # db.get_title('9782707321213')
+
+df = db.get_model("posts")
+print(df["dc:title"])
 
 

@@ -1,3 +1,6 @@
+# Following this tutorial to implement data model =>
+# https://doc.qt.io/qtforpython-6/tutorials/datavisualize/add_tableview.html
+
 from PySide6.QtCore import Qt, QAbstractTableModel, QModelIndex
 from PySide6.QtGui import QColor
 

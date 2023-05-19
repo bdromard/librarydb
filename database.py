@@ -1,5 +1,6 @@
 import requests as req
 import json
+import pandas
 from pymongo import *
 import xmltodict
 import errors
@@ -155,6 +156,7 @@ class Database:
     def get_model(self, collection_name: str):
         collection_to_show = self.db[f'{collection_name}']
         collection_cursor = collection_to_show.find()
-        return collection_cursor
+        df = pandas.DataFrame(data=collection_cursor)
+        return df
 
 
