@@ -5,7 +5,7 @@ from pymongo import *
 import xmltodict
 import errors
 import gui
-import re
+
 
 
 API_URL = "http://catalogue.bnf.fr/api/SRU?version=1.2&operation=searchRetrieve&query="

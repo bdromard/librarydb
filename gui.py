@@ -1,4 +1,3 @@
-from PySide6 import QtCore, QtGui
 import bnf_database as db
 from PySide6.QtWidgets import (QMainWindow, QGroupBox, QLabel, QLineEdit, QHBoxLayout,
                                QPushButton, QMessageBox, QWidget, QTableView, QHeaderView, QSizePolicy, QDialog)
