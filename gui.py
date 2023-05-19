@@ -10,7 +10,7 @@ class MainWindow(QMainWindow):
         super().__init__()
         self.setGeometry(100, 100, 600, 400)
         self.setWindowTitle("LibraryDB")
-        self.group_box = QGroupBox(title="Box pour l'ajout de références bibliographiques")
+        self.group_box = QGroupBox(title="Ajout de références bibliographiques")
         self.setCentralWidget(self.group_box)
         self.create_labels()
         self.create_inputs()
@@ -47,13 +47,6 @@ class MainWindow(QMainWindow):
         self.show_titles.setGeometry(10, 150, 225, 30)
         self.show_titles.clicked.connect(self.create_data_table)
 
-    # Create dialog box that will receive the QTableView to show data
-    def create_dialog(self):
-        self.data_dialog = QDialog(self)
-        self.data_dialog.setGeometry(70, 70, 500, 500)
-        self.data_dialog.setWindowTitle("Votre collection")
-        self.data_table_view = DataTable(self.data_dialog)
-        self.data_dialog.show()
 
     def set_buddies(self):
         # Keyboard focus on selected label.
@@ -110,10 +103,7 @@ class DataTable(QWidget):
         size.setHorizontalStretch(1)
         self.main_layout.addWidget(self.table_view)
         self.setLayout(self.main_layout)
-        # collection = db.Database.get_model(db.Database(), "collection_name")
-        # data_box = QDialog(self)
-        # data_box.setGeometry(70, 70, 500, 500)
-        # data_box.setWindowTitle("Votre collection")
+
 
 
 
