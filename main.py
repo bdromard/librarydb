@@ -1,16 +1,12 @@
-from database import *
 from gui import *
 import sys
-import random
-import pymongo
 from PySide6 import QtCore, QtWidgets, QtGui
 
 
-db = Database()
-# app = QtWidgets.QApplication([])
-# widget = MainWindow()
-# widget.show()
-# sys.exit(app.exec())
+app = QtWidgets.QApplication([])
+widget = MainWindow()
+widget.show()
+sys.exit(app.exec())
 
 # Appels de fonction de test
 
@@ -32,10 +28,10 @@ db = Database()
 
 # db.get_title('9782707321213')
 
-df = db.get_model("posts")
-print(df)
-titles = df['dc:title'].tolist()
-authors = df['dc:creator'].tolist()
-print(titles)
-print(authors)
+# df = db.get_model("posts")
+# print(df)
+# titles = df['dc:title'].tolist()
+# authors = df['dc:creator'].tolist()
+# print(titles)
+# print(authors)
 

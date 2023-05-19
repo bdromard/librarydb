@@ -1,15 +1,9 @@
 from PySide6 import QtCore, QtGui
-import sys
-import random
-import pandas
+import bnf_database as db
 from PySide6.QtWidgets import (QMainWindow, QGroupBox, QLabel, QLineEdit, QHBoxLayout,
                                QPushButton, QMessageBox, QWidget, QTableView, QHeaderView, QSizePolicy, QDialog)
 
-from model import CollectionTableModel
-
-import database as db
-
-data = [{"title": "title"}, {"author": "author"}, {"ISBN": "ISBN"}]
+from data_model import CollectionTableModel
 
 class MainWindow(QMainWindow):
 
@@ -52,14 +46,14 @@ class MainWindow(QMainWindow):
         self.add_collection_btn.clicked.connect(self.collection_button_clicked)
         self.show_titles = QPushButton("Montrer oeuvres de la collection", self)
         self.show_titles.setGeometry(10, 150, 225, 30)
-        self.show_titles.clicked.connect(self.create_dialog)
+        self.show_titles.clicked.connect(self.create_data_table)
 
     # Create dialog box that will receive the QTableView to show data
     def create_dialog(self):
         self.data_dialog = QDialog(self)
         self.data_dialog.setGeometry(70, 70, 500, 500)
         self.data_dialog.setWindowTitle("Votre collection")
-        # self.data_table_view = DataTable(self)
+        self.data_table_view = DataTable(self.data_dialog)
         self.data_dialog.show()
 
     def set_buddies(self):
@@ -67,6 +61,9 @@ class MainWindow(QMainWindow):
         self.isbn_label.setBuddy(self.isbn_input)
         self.title_label.setBuddy(self.title_input)
 
+    def create_data_table(self):
+        self.data_table = DataTable(self)
+        self.data_table.show()
 
     # Slots to clear input when clicked once. Works with every mouse input. Primary function does not return anything,
     # which allows it to work only once.
@@ -85,7 +82,6 @@ class MainWindow(QMainWindow):
 
     def title_button_clicked(self):
         title = self.title_input.text()
-        print(title)
         db.Database.add_by_title(db.Database(), title)
 
     def collection_button_clicked(self):
@@ -113,7 +109,6 @@ class DataTable(QWidget):
         self.main_layout = QHBoxLayout()
         size = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
         size.setHorizontalStretch(1)
-        self.table_view.setSizePolicy(size)
         self.main_layout.addWidget(self.table_view)
         self.setLayout(self.main_layout)
         # collection = db.Database.get_model(db.Database(), "collection_name")
