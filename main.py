@@ -33,6 +33,9 @@ db = Database()
 # db.get_title('9782707321213')
 
 df = db.get_model("posts")
-print(df["dc:title"])
-
+print(df)
+titles = df['dc:title'].tolist()
+authors = df['dc:creator'].tolist()
+print(titles)
+print(authors)
 

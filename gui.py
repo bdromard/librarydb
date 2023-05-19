@@ -85,6 +85,7 @@ class MainWindow(QMainWindow):
 
     def title_button_clicked(self):
         title = self.title_input.text()
+        print(title)
         db.Database.add_by_title(db.Database(), title)
 
     def collection_button_clicked(self):
