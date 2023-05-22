@@ -4,22 +4,21 @@ import bnf_database as db
 from PySide6.QtCore import Qt, QAbstractTableModel, QModelIndex
 from PySide6.QtGui import QColor
 
-# Gets collection to shox titles and authors.
-df = db.Database.get_model(db.Database(), "posts")
-titles = df['dc:title'].tolist()
-authors = df['dc:creator'].tolist()
-df_data = [titles, authors]
-
 # Model readable by QTableView in gui.py
 class CollectionTableModel(QAbstractTableModel):
 
     def __init__(self, data=None):
         QAbstractTableModel.__init__(self)
+        self.df = db.Database.get_model(db.Database(), "posts")
+        self.titles = self.df['dc:title'].tolist()
+        self.authors = self.df['dc:creator'].tolist()
+        self.df_data = [self.titles, self.authors]
         self.load_data(data)
 
+
     def load_data(self, df_data):
-        self.input_titles = titles
-        self.input_authors = authors
+        self.input_titles = self.titles
+        self.input_authors = self.authors
 
         self.column_count = 2
         self.row_count = len(self.input_titles)
