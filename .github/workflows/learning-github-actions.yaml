@@ -22,6 +22,8 @@ jobs:
       - run: echo 'This is ${{ env.pseudonym }} speaking'
         env:
           pseudonym: Ligriv
+      - run: cat test.txt
+      - run: python3 main.py
   windows_job:
     runs-on: windows-latest
     env:
