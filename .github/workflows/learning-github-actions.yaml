@@ -16,6 +16,9 @@ jobs:
       - run: bats -v
       - run: echo 'This is ${{ env.pseudonym }} speaking'
       - run: echo "The OS on the runner is $RUNNER_OS."
+      - run: echo 'Test piping in workflow' | cat > test.txt
+      - run: ls -l
+      - run: touch test2.txt
       - run: echo 'This is ${{ env.pseudonym }} speaking'
         env:
           pseudonym: Ligriv
