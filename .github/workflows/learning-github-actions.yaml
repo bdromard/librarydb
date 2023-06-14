@@ -15,7 +15,7 @@ jobs:
       - run: npm install -g bats
       - run: bats -v
       - run: echo 'This is ${{ env.pseudonym }} speaking'
-      - run: echo 'Running a ${{ jobs.linux_job.runs_on }} job'
+      - run: echo 'The OS on the runner is $env:RUNNER_OS.'
       - run: echo 'This is ${{ env.pseudonym }} speaking'
         env:
           pseudonym: Ligriv
@@ -25,4 +25,5 @@ jobs:
       pseudonym: Better_Virgil
     steps:
       - run: echo 'This is ${{ env.pseudonym }} speaking'
-      - run: echo 'Running a ${{ jobs.windows_job.runs_on }} job'
+      - run: echo 'The OS on the runner is $env:RUNNER_OS.'
+
