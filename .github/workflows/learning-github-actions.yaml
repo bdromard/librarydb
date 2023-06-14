@@ -1,8 +1,11 @@
 name: learning-github-actions
 run-name: ${{ github.actor }} is learning GitHub Actions
 on: [push]
+env:
+  pseudonym: Virgil
+  env_var: some_var
 jobs:
-  check-bats-version:
+  linux_job:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -11,3 +14,12 @@ jobs:
           node-version: '14'
       - run: npm install -g bats
       - run: bats -v
+      - run: echo 'This is ${{ env.pseudonym }} speaking
+        env:
+          pseudonym: Ligriv
+  windows_job:
+    runs-on: windows-latest
+    env:
+      pseudonym: Better_Virgil
+    steps:
+      - run: echo 'This is ${{ env.pseudonym }} speaking'
