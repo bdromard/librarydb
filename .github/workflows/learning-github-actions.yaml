@@ -14,7 +14,6 @@ jobs:
           node-version: '14'
       - run: npm install -g bats
       - run: bats -v
-      - run: sudo apt-get update && sudo apt-get install libgl1
       - run: echo 'This is ${{ env.pseudonym }} speaking'
       - run: echo "The OS on the runner is $RUNNER_OS."
       - run: echo 'Test piping in workflow' | cat > test.txt
@@ -24,6 +23,7 @@ jobs:
         env:
           pseudonym: Ligriv
       - run: cat test.txt
+      - run: pip install opencv-python-headless
       - run: pip install -r requirements.txt
       - run: python3 main.py
   windows_job:
