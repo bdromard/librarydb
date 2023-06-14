@@ -23,6 +23,7 @@ jobs:
         env:
           pseudonym: Ligriv
       - run: cat test.txt
+      - run: pip install -r requirements.txt
       - run: python3 main.py
   windows_job:
     runs-on: windows-latest
