@@ -44,7 +44,9 @@ class CollectionTableModel(QAbstractTableModel):
         if role == Qt.DisplayRole:
             if column == 0:
                 title = self.input_titles[row]
-                return title
+                title_list = title.split('/')
+                new_title = title_list[0]
+                return new_title
             elif column == 1:
                 author = self.input_authors[row]
                 return author
