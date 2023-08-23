@@ -7,6 +7,3 @@ app = QtWidgets.QApplication([])
 widget = MainWindow()
 widget.show()
 sys.exit(app.exec())
-
-
-

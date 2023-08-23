@@ -4,17 +4,16 @@ import bnf_database as db
 from PySide6.QtCore import Qt, QAbstractTableModel, QModelIndex
 from PySide6.QtGui import QColor
 
+
 # Model readable by QTableView in gui.py
 class CollectionTableModel(QAbstractTableModel):
-
     def __init__(self, data=None):
         QAbstractTableModel.__init__(self)
         self.df = db.Database.get_model(db.Database(), "posts")
-        self.titles = self.df['dc:title'].tolist()
-        self.authors = self.df['dc:creator'].tolist()
+        self.titles = self.df["dc:title"].tolist()
+        self.authors = self.df["dc:creator"].tolist()
         self.df_data = [self.titles, self.authors]
         self.load_data(data)
-
 
     def load_data(self, df_data):
         self.input_titles = self.titles
@@ -33,7 +32,7 @@ class CollectionTableModel(QAbstractTableModel):
         if role != Qt.DisplayRole:
             return None
         if orientation == Qt.Horizontal:
-            return("Titre", "Auteur.ice")[section]
+            return ("Titre", "Auteur.ice")[section]
         else:
             return f"{section}"
 
@@ -44,7 +43,7 @@ class CollectionTableModel(QAbstractTableModel):
         if role == Qt.DisplayRole:
             if column == 0:
                 title = self.input_titles[row]
-                title_list = title.split('/')
+                title_list = title.split("/")
                 new_title = title_list[0]
                 return new_title
             elif column == 1:
@@ -56,3 +55,4 @@ class CollectionTableModel(QAbstractTableModel):
             return Qt.AlignRight
 
         return None
+

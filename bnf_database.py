@@ -7,26 +7,28 @@ import errors
 import gui
 
 
-
 API_URL = "http://catalogue.bnf.fr/api/SRU?version=1.2&operation=searchRetrieve&query="
 # ---------------------------------DATABASE CODE------------------------------------------------------------------------
 # Database access
 
+
 # Checking ISBN format: BNF API does not allow hyphen.
 def check_isbn(isbn):
     if not isbn.startswith("978"):
-        gui.MainWindow.raise_error(gui.MainWindow(), 'Veuillez insérer un ISBN au bon format.')
+        gui.MainWindow.raise_error(
+            gui.MainWindow(), "Veuillez insérer un ISBN au bon format."
+        )
         raise errors.IncorrectISBNFormat
     elif isbn.startswith("978-"):
-        isbn_split = isbn.split('-')
-        isbn_join = ''.join(isbn_split)
+        isbn_split = isbn.split("-")
+        isbn_join = "".join(isbn_split)
         return isbn_join
     else:
         return isbn
 
+
 # Database class creation.
 class Database:
-
     # class __init__ ; MongoDB client init, using test DB and two test collections.
     def __init__(self):
         self.client = MongoClient()
@@ -51,7 +53,8 @@ class Database:
         try:
             # BNF API request.
             response = req.get(
-                f'{API_URL}bib.isbn%20any%20"{correct_isbn}"&recordSchema=dublincore')
+                f'{API_URL}bib.isbn%20any%20"{correct_isbn}"&recordSchema=dublincore'
+            )
             response.raise_for_status()
             response_xml = xmltodict.parse(response.content)
             # Search is the number of results through the BNF API request. If there are no results, then exception raised.
@@ -60,14 +63,20 @@ class Database:
             if search == "0":
                 raise errors.ResultError(search)
         except Exception as err:
-            gui.MainWindow.raise_error(gui.MainWindow(), "L'ISBN ne renvoie pas de données exploitables. "
-                                                         "Essayez un autre type de recherche.")
+            gui.MainWindow.raise_error(
+                gui.MainWindow(),
+                "L'ISBN ne renvoie pas de données exploitables. "
+                "Essayez un autre type de recherche.",
+            )
         else:
             # JSON method to prettify JSON file. Returns string.
             pretty_response = json.dumps(
-                response_xml["srw:searchRetrieveResponse"]["srw:records"]["srw:record"]["srw:recordData"],
+                response_xml["srw:searchRetrieveResponse"]["srw:records"]["srw:record"][
+                    "srw:recordData"
+                ],
                 sort_keys=True,
-                indent=4)
+                indent=4,
+            )
             print(pretty_response)
             # File open and write JSON data, accepted by MongoDB. Collection insert.
             with open("data.json", "w") as data:
@@ -85,20 +94,27 @@ class Database:
         #     raise errors.ExistingReference()
         try:
             response = req.get(
-                f'{API_URL}bib.title%20any%20"{verified_title}"&recordSchema=dublincore&maximumRecords=1')
+                f'{API_URL}bib.title%20any%20"{verified_title}"&recordSchema=dublincore&maximumRecords=1'
+            )
             response.raise_for_status()
             response_xml = xmltodict.parse(response.content)
             search = response_xml["srw:searchRetrieveResponse"]["srw:numberOfRecords"]
             if search == "0":
                 raise errors.ResultError(search)
         except Exception as err:
-            gui.MainWindow.raise_error(gui.MainWindow(), 'Ce titre ne renvoie pas de données exploitables. '
-                                                         'Essayez un autre titre ou un autre type de recherche.')
+            gui.MainWindow.raise_error(
+                gui.MainWindow(),
+                "Ce titre ne renvoie pas de données exploitables. "
+                "Essayez un autre titre ou un autre type de recherche.",
+            )
         else:
             pretty_response = json.dumps(
-                response_xml["srw:searchRetrieveResponse"]["srw:records"]["srw:record"]["srw:recordData"]["oai_dc:dc"],
+                response_xml["srw:searchRetrieveResponse"]["srw:records"]["srw:record"][
+                    "srw:recordData"
+                ]["oai_dc:dc"],
                 sort_keys=True,
-                indent=4)
+                indent=4,
+            )
             print(pretty_response)
             with open("data.json", "w") as data:
                 data.write(pretty_response)
@@ -111,7 +127,7 @@ class Database:
         search = self.test_collection.find({"$text": {"$search": f"{query}"}})
         title_result = search.distinct("oai_dc:dc.dc:creator")
         value_split = title_result[0].split(" ")
-        author_ln = value_split[0].strip(',')
+        author_ln = value_split[0].strip(",")
         author_fn = value_split[1]
         author_string = f"{author_fn} {author_ln}"
         return author_string
@@ -132,31 +148,34 @@ class Database:
     def get_isbn(self, isbn):
         search = self.test_collection.find({"$text": {"$search": f"{isbn}"}})
         try:
-            search.distinct("oai_dc:dc.dc:identifier")[0].replace('ISBN ', '')
+            search.distinct("oai_dc:dc.dc:identifier")[0].replace("ISBN ", "")
         except IndexError:
             return isbn
         else:
-            gui.MainWindow.raise_error(gui.MainWindow(), 'Cette référence est déjà présente dans votre collection')
+            gui.MainWindow.raise_error(
+                gui.MainWindow(),
+                "Cette référence est déjà présente dans votre collection",
+            )
             raise errors.ExistingReference()
 
     # Creation of new collection in DB.
     def create_collection(self, name: str):
         # First, check if collection already exists in DB.
         try:
-            collection_search = self.db.list_collection_names().index(f'{name}')
+            collection_search = self.db.list_collection_names().index(f"{name}")
         # If ValueError is raised, the collection does not exist: create collection.
         except ValueError:
-            self.db.create_collection(f'{name}')
+            self.db.create_collection(f"{name}")
         else:
-            gui.MainWindow.raise_error(gui.MainWindow(), 'Cette collection existe déjà.')
+            gui.MainWindow.raise_error(
+                gui.MainWindow(), "Cette collection existe déjà."
+            )
             raise errors.ExistingCollection()
 
     # Show all documents in selected collection. Console print at the moment => create data visualization in software.
     # Create a model readable by QTableView in Qt.
     def get_model(self, collection_name: str):
-        collection_to_show = self.db[f'{collection_name}']
+        collection_to_show = self.db[f"{collection_name}"]
         collection_cursor = collection_to_show.find()
         df = pandas.DataFrame(data=collection_cursor)
         return df
-
-

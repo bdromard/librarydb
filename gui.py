@@ -1,11 +1,23 @@
 import bnf_database as db
-from PySide6.QtWidgets import (QMainWindow, QGroupBox, QLabel, QLineEdit, QHBoxLayout,
-                               QPushButton, QMessageBox, QWidget, QTableView, QHeaderView, QSizePolicy, QDialog)
+from PySide6.QtWidgets import (
+    QMainWindow,
+    QGroupBox,
+    QLabel,
+    QLineEdit,
+    QHBoxLayout,
+    QPushButton,
+    QMessageBox,
+    QWidget,
+    QTableView,
+    QHeaderView,
+    QSizePolicy,
+    QDialog,
+)
 
 from data_model import CollectionTableModel
 
-class MainWindow(QMainWindow):
 
+class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setGeometry(100, 100, 600, 400)
@@ -25,14 +37,15 @@ class MainWindow(QMainWindow):
         self.title_label.setGeometry(10, 70, 100, 30)
 
     def create_inputs(self):
-        self.isbn_input = QLineEdit('Ajout par ISBN du livre', self)
+        self.isbn_input = QLineEdit("Ajout par ISBN du livre", self)
         self.isbn_input.setGeometry(105, 30, 200, 30)
         self.isbn_input.mousePressEvent = self._mousePressEvent_isbn
-        self.title_input = QLineEdit('Ajout par titre du livre', self)
+        self.title_input = QLineEdit("Ajout par titre du livre", self)
         self.title_input.setGeometry(105, 70, 200, 30)
         self.title_input.mousePressEvent = self._mousePressEvent_title
-        self.collection_input = QLineEdit('Créer une nouvelle collection', self)
+        self.collection_input = QLineEdit("Créer une nouvelle collection", self)
         self.collection_input.setGeometry(10, 110, 210, 30)
+
     def create_buttons(self):
         self.add_isbn_btn = QPushButton("Ajouter ISBN", self)
         self.add_isbn_btn.setGeometry(310, 30, 100, 30)
@@ -46,7 +59,6 @@ class MainWindow(QMainWindow):
         self.show_titles = QPushButton("Montrer oeuvres de la collection", self)
         self.show_titles.setGeometry(10, 150, 225, 30)
         self.show_titles.clicked.connect(self.create_data_table)
-
 
     def set_buddies(self):
         # Keyboard focus on selected label.
@@ -86,6 +98,7 @@ class MainWindow(QMainWindow):
         message = QMessageBox(self, text=text)
         message.exec()
 
+
 # Creating DataTable class to show data
 class DataTable(QWidget):
     def __init__(self, data):
@@ -103,19 +116,3 @@ class DataTable(QWidget):
         size.setHorizontalStretch(1)
         self.main_layout.addWidget(self.table_view)
         self.setLayout(self.main_layout)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
