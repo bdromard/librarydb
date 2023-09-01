@@ -4,8 +4,8 @@ Personal library management software.
 <br>I have not been working on this project in the last few months.
 <br>It uses the Bibliothèque Nationale de France's API to find bibliographical references and adding them to a database's collection. 
 <br>At the moment, the software allows the user to add references to a collection (with the book's ISBN or its title), to create a collection, and to show the collection's contents.
-<br>I have not been working on this project
-<b> Built with:</b>
+
+<br><b> Built with: </b>
 <h3>For the frontend:</h3>
 <ul>
 <li><img src="https://img.shields.io/badge/Qt-41CD52?style=for-the-badge&logo=qt&logoColor=white"></li>
