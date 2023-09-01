@@ -6,12 +6,12 @@ Personal library management software.
 <br>At the moment, the software allows the user to add references to a collection (with the book's ISBN or its title), to create a collection, and to show the collection's contents.
 
 <br><b> Built with: </b>
-<h4>For the frontend:</h4>
 <ul>
-<li><img src="https://img.shields.io/badge/Qt-41CD52?style=for-the-badge&logo=qt&logoColor=white"></li>
-<h4>For the backend:</h4>
-<li><img src="https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white"</li> 
-<li>PyMongo to link Python and MongoDB.</li>
+  <h4>For the frontend:</h4>
+  <li><img src="https://img.shields.io/badge/Qt-41CD52?style=for-the-badge&logo=qt&logoColor=white"></li>
+  <h4>For the backend:</h4>
+  <li><img src="https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white"</li> 
+  <li>PyMongo to link Python and MongoDB.</li>
 </ul>
 
 <h2> 🛠️ Setting up the project:</h2>
