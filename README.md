@@ -1,6 +1,6 @@
 <h2> 📖 About the project </h2>
 Personal library management software. 
-<br>This project is the first Python software I made from scratch, and was meant for me to progress in my Object Oriented Programming learning in Python, with both frontend and backend components.
+<br>This project is the first Python software I made from scratch, and was meant for me to make progress in my Object Oriented Programming learning in Python, with both frontend and backend components.
 <br>I have not been working on this project in the last few months.
 <br>It uses the Bibliothèque Nationale de France's API to find bibliographical references and adding them to a database's collection. 
 <br>At the moment, the software allows the user to add references to a collection (with the book's ISBN or its title), to create a collection, and to show the collection's contents.
